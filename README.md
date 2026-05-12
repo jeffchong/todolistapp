@@ -1,8 +1,24 @@
 # To-Do List
 
+![Swift](https://img.shields.io/badge/Swift-6.0-FA7343?logo=swift&logoColor=white)
+![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-0D96F6?logo=swift&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-macOS-000000?logo=apple&logoColor=white)
+![Xcode](https://img.shields.io/badge/Xcode-Project-147EFB?logo=xcode&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+![CI](https://github.com/jeffchong/todolistapp/actions/workflows/ci.yml/badge.svg)
+
 A native SwiftUI macOS to-do list app designed to live both as a standard dock/window app and as a menu bar utility.
 
 The app is intentionally lightweight: tasks are grouped by project, can be managed quickly from the menu bar, and persist locally as JSON while cloud sync providers are being built out.
+
+## Tech Stack
+
+- **Language:** Swift 6
+- **UI:** SwiftUI
+- **Platform:** macOS 15.0+
+- **Persistence:** Local JSON in Application Support
+- **Testing:** XCTest
+- **Cloud Sync:** CloudKit and OneDrive provider scaffolding
 
 ## Features
 
