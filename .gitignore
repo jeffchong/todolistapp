@@ -1,0 +1,38 @@
+# Xcode
+DerivedData/
+build/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# App packaging
+*.app
+*.dSYM
+*.ipa
+*.pkg
+
+# Signing and provisioning
+*.mobileprovision
+*.provisionprofile
+*.cer
+*.p12
+
+# Logs and local environment
+*.log
+.env
+.env.*
+
+# Test artifacts
+TestResults/
+*.xcresult
