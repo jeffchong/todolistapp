@@ -53,6 +53,22 @@ final class TaskStoreTests: XCTestCase {
     }
 
     @MainActor
+    func testAddingTaskWithUnknownGroupUsesDefaultGroup() {
+        withFixture { store in
+            let task = store.addTask(
+                title: "Orphan prevention",
+                notes: "",
+                groupID: UUID(),
+                dueDate: nil,
+                link: nil
+            )
+
+            XCTAssertEqual(task.groupID, store.defaultGroupID)
+            XCTAssertEqual(store.tasks(for: store.groups[0]).map(\.id), [task.id])
+        }
+    }
+
+    @MainActor
     func testOpenTasksExcludeCompletedTasks() {
         withFixture { store in
             let groupID = store.defaultGroupID
@@ -189,6 +205,45 @@ final class TaskStoreTests: XCTestCase {
     }
 
     @MainActor
+    func testLoadErrorDoesNotOverwriteExistingStorageFile() throws {
+        try withTemporaryDirectory { temporaryDirectory in
+            let dataFile = temporaryDirectory.appendingPathComponent("tasks.json")
+            try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+            try Data("not json".utf8).write(to: dataFile)
+
+            let store = TaskStore(
+                storage: TaskStorage(directoryURL: temporaryDirectory),
+                startsReminderScheduler: false
+            )
+
+            XCTAssertEqual(store.groups.map(\.name), ["General"])
+            XCTAssertTrue(store.tasks.isEmpty)
+            XCTAssertNotNil(store.lastError)
+            XCTAssertEqual(try String(contentsOf: dataFile, encoding: .utf8), "not json")
+        }
+    }
+
+    @MainActor
+    func testLoadRepairsTasksWithMissingGroupsToGeneral() throws {
+        try withTemporaryDirectory { temporaryDirectory in
+            let missingGroupID = UUID()
+            let task = TaskItem(groupID: missingGroupID, title: "Needs a home")
+            try TaskStorage(directoryURL: temporaryDirectory).save(TaskSnapshot(groups: [], tasks: [task]))
+
+            let store = TaskStore(
+                storage: TaskStorage(directoryURL: temporaryDirectory),
+                startsReminderScheduler: false
+            )
+
+            XCTAssertEqual(store.groups.map(\.name), ["General"])
+            XCTAssertEqual(store.tasks.map(\.groupID), [store.defaultGroupID])
+
+            let loadedSnapshot = try TaskStorage(directoryURL: temporaryDirectory).load()
+            XCTAssertEqual(loadedSnapshot.tasks.map(\.groupID), [store.defaultGroupID])
+        }
+    }
+
+    @MainActor
     func testReminderTasksIncludeOpenHighPriorityAndDueTodayTasksOnlyOnce() {
         withFixture { store in
             let now = Date(timeIntervalSince1970: 1_700_000_000)
@@ -237,6 +292,15 @@ final class TaskStoreTests: XCTestCase {
         }
 
         body(store)
+    }
+
+    private func withTemporaryDirectory(_ body: (URL) throws -> Void) throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("ToDoListAppTests-\(UUID().uuidString)", isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: temporaryDirectory)
+        }
+        try body(temporaryDirectory)
     }
 
     @discardableResult

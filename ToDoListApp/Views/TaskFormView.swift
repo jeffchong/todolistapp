@@ -150,8 +150,14 @@ struct TaskFormView: View {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
         if let url = URL(string: trimmed), url.scheme != nil {
-            return url
+            return isWebURL(url) ? url : nil
         }
-        return URL(string: "https://\(trimmed)")
+        guard let url = URL(string: "https://\(trimmed)") else { return nil }
+        return isWebURL(url) ? url : nil
+    }
+
+    private func isWebURL(_ url: URL) -> Bool {
+        guard let scheme = url.scheme?.lowercased() else { return false }
+        return scheme == "http" || scheme == "https"
     }
 }

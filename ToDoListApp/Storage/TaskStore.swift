@@ -94,8 +94,9 @@ final class TaskStore: ObservableObject {
         status: TaskStatus = .todo,
         priority: TaskPriority = .normal
     ) -> TaskItem {
+        let resolvedGroupID = groups.contains(where: { $0.id == groupID }) ? groupID : defaultGroupID
         let task = TaskItem(
-            groupID: groupID,
+            groupID: resolvedGroupID,
             title: title.trimmingCharacters(in: .whitespacesAndNewlines),
             notes: notes.trimmingCharacters(in: .whitespacesAndNewlines),
             dueDate: dueDate,
@@ -157,12 +158,21 @@ final class TaskStore: ObservableObject {
             let snapshot = try storage.load()
             groups = snapshot.groups
             tasks = snapshot.tasks
-            _ = ensureDefaultGroup(saveAfterCreating: false)
+            let defaultGroupID = ensureDefaultGroup(saveAfterCreating: false)
+            let groupIDs = Set(groups.map(\.id))
+            var repairedDanglingTasks = false
+            for index in tasks.indices where !groupIDs.contains(tasks[index].groupID) {
+                tasks[index].groupID = defaultGroupID
+                tasks[index].updatedAt = .now
+                repairedDanglingTasks = true
+            }
+            if repairedDanglingTasks {
+                save()
+            }
         } catch {
             groups = [TaskGroup(name: "General")]
             tasks = []
             lastError = error.localizedDescription
-            save()
         }
     }
 
