@@ -10,8 +10,8 @@ on:
 
 jobs:
   test:
-    name: Unit Tests
-    runs-on: macos-latest
+    name: Build and Unit Tests
+    runs-on: macos-15
 
     steps:
       - name: Check out repository
@@ -20,10 +20,15 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
 
-      - name: Run tests
+      - name: Build app
         run: |
-          xcodebuild test \
+          xcodebuild build \
             -project ToDoListApp.xcodeproj \
             -scheme ToDoListApp \
             -configuration Debug \
-            -destination 'platform=macOS'
+            -destination 'platform=macOS,arch=arm64' \
+            -derivedDataPath "$RUNNER_TEMP/ToDoListAppDerivedData" \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Run unit tests
+        run: swift test
