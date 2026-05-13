@@ -303,8 +303,8 @@ private final class TaskReminderScheduler {
 
     private func requestNotificationPermissionIfNeeded() async {
         let center = UNUserNotificationCenter.current()
-        let settings = await center.notificationSettings()
-        guard settings.authorizationStatus == .notDetermined else { return }
+        let authorizationStatus = await notificationAuthorizationStatus()
+        guard authorizationStatus == .notDetermined else { return }
 
         do {
             _ = try await center.requestAuthorization(options: [.alert, .sound])
@@ -344,8 +344,8 @@ private final class TaskReminderScheduler {
 
     private func publishReminders() async {
         let center = UNUserNotificationCenter.current()
-        let settings = await center.notificationSettings()
-        guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
+        let authorizationStatus = await notificationAuthorizationStatus()
+        guard authorizationStatus == .authorized || authorizationStatus == .provisional else {
             return
         }
 
@@ -363,6 +363,14 @@ private final class TaskReminderScheduler {
                 try await center.add(request)
             } catch {
                 store.lastError = error.localizedDescription
+            }
+        }
+    }
+
+    private func notificationAuthorizationStatus() async -> UNAuthorizationStatus {
+        await withCheckedContinuation { continuation in
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                continuation.resume(returning: settings.authorizationStatus)
             }
         }
     }
