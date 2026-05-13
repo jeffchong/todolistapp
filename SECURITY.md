@@ -2,7 +2,12 @@
 
 ## Supported Versions
 
-This app is in early development. Security fixes should target the latest `main` branch unless a release branch exists.
+This app is in alpha. Security fixes should target the latest `main` branch unless a release branch exists.
+
+| Version | Supported |
+| --- | --- |
+| `0.1.x-alpha` | Yes |
+| Earlier builds | No |
 
 ## Reporting a Vulnerability
 

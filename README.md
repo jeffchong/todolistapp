@@ -3,6 +3,7 @@
 ![Swift](https://img.shields.io/badge/Swift-6.0-FA7343?logo=swift&logoColor=white)
 ![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-0D96F6?logo=swift&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-macOS-000000?logo=apple&logoColor=white)
+![Release](https://img.shields.io/badge/Release-0.1%20alpha-orange)
 ![Xcode](https://img.shields.io/badge/Xcode-Project-147EFB?logo=xcode&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![CI](https://github.com/jeffchong/todolistapp/actions/workflows/ci.yml/badge.svg)
@@ -40,12 +41,19 @@ The app is intentionally lightweight: tasks are grouped by project, can be manag
 
 ## Project Status
 
-This is an early macOS app. Local task management is functional. Cloud sync is currently represented by provider scaffolding:
+This is an alpha macOS app. Version `0.1` is intended for early testers who are comfortable with a local-first productivity app that may still change shape.
+
+Local task management is functional. Cloud sync is currently represented by provider scaffolding:
 
 - iCloud/CloudKit provider placeholder.
 - OneDrive personal/work provider placeholder.
 
 Before treating sync as production-ready, the providers need real account/auth flows, merge behavior, conflict handling, and user-visible sync state.
+
+For release prep and tester-facing notes, see:
+
+- [Alpha tester guide](docs/ALPHA_TESTER_GUIDE.md)
+- [Release checklist](docs/RELEASE_CHECKLIST.md)
 
 ## Requirements
 
@@ -59,7 +67,7 @@ Before treating sync as production-ready, the providers need real account/auth f
 2. Open `ToDoListApp.xcodeproj` in Xcode.
 3. Select the `ToDoListApp` target.
 4. Set your development team for signing.
-5. Change the bundle identifier from `com.local.ToDoListApp` to one you own.
+5. Confirm the bundle identifier is appropriate for your signing team.
 6. Build and run the `ToDoListApp` scheme.
 
 ## Build From Terminal
@@ -78,6 +86,20 @@ After building, the debug app bundle is usually available at:
 ```text
 /tmp/todo-derived/Build/Products/Debug/To-Do List.app
 ```
+
+## Create an Alpha Build
+
+For the `0.1` alpha, use a signed Release build from Xcode when sharing with testers.
+
+1. Open `ToDoListApp.xcodeproj`.
+2. Select the `ToDoListApp` target.
+3. Set your development team.
+4. Confirm the marketing version is `0.1` and increment the build number if you are replacing a prior tester build.
+5. Choose **Product > Archive**.
+6. Export a signed Developer ID or development build appropriate for your tester group.
+7. Share the app together with the [alpha tester guide](docs/ALPHA_TESTER_GUIDE.md).
+
+For a very small trusted tester group, an unsigned zip can be shared through GitHub Releases. Expect macOS Gatekeeper friction for unsigned builds.
 
 ## Run Tests
 

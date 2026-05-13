@@ -17,6 +17,7 @@ Package.resolved
 .LSOverride
 
 # App packaging
+dist/
 *.app
 *.dSYM
 *.ipa
