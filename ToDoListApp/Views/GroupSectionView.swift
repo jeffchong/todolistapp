@@ -4,6 +4,9 @@ struct GroupSectionView: View {
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var store: TaskStore
     let group: TaskGroup
+    var showsReorderHandle = false
+    var reservesReorderHandleSpace = false
+    var onDragGroup: (() -> NSItemProvider)?
 
     @State private var showingNewTask = false
 
@@ -45,6 +48,19 @@ struct GroupSectionView: View {
         let openCount = store.taskCount(for: group, includeCompleted: false)
 
         return HStack(spacing: 10) {
+            if showsReorderHandle, let onDragGroup {
+                Image(systemName: "line.3.horizontal")
+                    .font(settings.appFont(size: 12, weight: .semibold))
+                    .foregroundStyle(.primary.opacity(0.72))
+                    .frame(width: 18, height: 18)
+                    .contentShape(Rectangle())
+                    .onDrag(onDragGroup)
+                    .help("Drag to reorder group")
+            } else if reservesReorderHandleSpace {
+                Color.clear
+                    .frame(width: 18, height: 18)
+            }
+
             Button {
                 store.toggleGroupCollapsed(group)
             } label: {

@@ -190,6 +190,74 @@ final class TaskStoreTests: XCTestCase {
     }
 
     @MainActor
+    func testMoveGroupReordersCustomGroupsAndKeepsGeneralAtTop() {
+        withFixture { store in
+            let general = store.groups[0]
+            let alpha = store.addGroup(named: "Alpha")
+            let beta = store.addGroup(named: "Beta")
+            let gamma = store.addGroup(named: "Gamma")
+
+            store.moveGroup(id: gamma.id, to: 1)
+
+            XCTAssertEqual(store.groups.map(\.id), [general.id, gamma.id, alpha.id, beta.id])
+
+            store.moveGroup(id: general.id, to: 3)
+
+            XCTAssertEqual(store.groups.map(\.id), [general.id, gamma.id, alpha.id, beta.id])
+
+            store.moveGroup(id: alpha.id, to: 0)
+
+            XCTAssertEqual(store.groups.map(\.id), [general.id, alpha.id, gamma.id, beta.id])
+        }
+    }
+
+    @MainActor
+    func testAddingGroupAfterManualReorderPreservesExistingOrder() {
+        withFixture { store in
+            let general = store.groups[0]
+            let alpha = store.addGroup(named: "Alpha")
+            let beta = store.addGroup(named: "Beta")
+
+            store.moveGroup(id: beta.id, to: 1)
+            let gamma = store.addGroup(named: "Gamma")
+
+            XCTAssertEqual(store.groups.map(\.id), [general.id, beta.id, alpha.id, gamma.id])
+        }
+    }
+
+    @MainActor
+    func testGroupOrderPersistsAcrossReloads() throws {
+        try withTemporaryDirectory { temporaryDirectory in
+            let storage = TaskStorage(directoryURL: temporaryDirectory)
+            let store = TaskStore(storage: storage, startsReminderScheduler: false)
+            let general = store.groups[0]
+            let alpha = store.addGroup(named: "Alpha")
+            let beta = store.addGroup(named: "Beta")
+
+            store.moveGroup(id: beta.id, to: 1)
+
+            let reloadedStore = TaskStore(storage: storage, startsReminderScheduler: false)
+
+            XCTAssertEqual(reloadedStore.groups.map(\.id), [general.id, beta.id, alpha.id])
+        }
+    }
+
+    @MainActor
+    func testLoadMovesExistingGeneralGroupToTop() throws {
+        try withTemporaryDirectory { temporaryDirectory in
+            let project = TaskGroup(name: "Project")
+            let general = TaskGroup(name: "General")
+            let later = TaskGroup(name: "Later")
+            let storage = TaskStorage(directoryURL: temporaryDirectory)
+            try storage.save(TaskSnapshot(groups: [project, general, later], tasks: []))
+
+            let store = TaskStore(storage: storage, startsReminderScheduler: false)
+
+            XCTAssertEqual(store.groups.map(\.id), [general.id, project.id, later.id])
+        }
+    }
+
+    @MainActor
     func testResetDataClearsTasksAndCustomGroups() {
         withFixture { store in
             let project = store.addGroup(named: "Project")

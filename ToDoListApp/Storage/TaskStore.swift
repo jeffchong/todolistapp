@@ -47,6 +47,10 @@ final class TaskStore: ObservableObject {
         groups.first(where: { $0.id == groupID })?.name ?? "General"
     }
 
+    func canReorderGroup(_ group: TaskGroup) -> Bool {
+        !isDefaultGroup(group)
+    }
+
     func reminderTasks(for date: Date = .now) -> [TaskItem] {
         sorted(
             tasks.filter { task in
@@ -63,9 +67,26 @@ final class TaskStore: ObservableObject {
             colorHex: Self.groupColorPalette[groups.count % Self.groupColorPalette.count]
         )
         groups.append(group)
-        groups.sort { $0.createdAt < $1.createdAt }
+        _ = moveDefaultGroupToTop()
         save()
         return group
+    }
+
+    func moveGroup(id groupID: UUID, to destination: Int) {
+        guard let sourceIndex = groups.firstIndex(where: { $0.id == groupID }) else { return }
+        guard !isDefaultGroup(groups[sourceIndex]) else { return }
+
+        var insertionIndex = min(max(destination, 1), groups.count)
+        guard sourceIndex != insertionIndex && sourceIndex + 1 != insertionIndex else { return }
+
+        let group = groups.remove(at: sourceIndex)
+        if insertionIndex > sourceIndex {
+            insertionIndex -= 1
+        }
+        insertionIndex = min(max(insertionIndex, 1), groups.count)
+        groups.insert(group, at: insertionIndex)
+        _ = moveDefaultGroupToTop()
+        save()
     }
 
     func updateGroupColor(_ group: TaskGroup, colorHex: String) {
@@ -159,6 +180,7 @@ final class TaskStore: ObservableObject {
             groups = snapshot.groups
             tasks = snapshot.tasks
             let defaultGroupID = ensureDefaultGroup(saveAfterCreating: false)
+            let repairedGroupOrder = moveDefaultGroupToTop()
             let groupIDs = Set(groups.map(\.id))
             var repairedDanglingTasks = false
             for index in tasks.indices where !groupIDs.contains(tasks[index].groupID) {
@@ -166,7 +188,7 @@ final class TaskStore: ObservableObject {
                 tasks[index].updatedAt = .now
                 repairedDanglingTasks = true
             }
-            if repairedDanglingTasks {
+            if repairedGroupOrder || repairedDanglingTasks {
                 save()
             }
         } catch {
@@ -187,6 +209,20 @@ final class TaskStore: ObservableObject {
             save()
         }
         return group.id
+    }
+
+    private func isDefaultGroup(_ group: TaskGroup) -> Bool {
+        group.name.caseInsensitiveCompare("General") == .orderedSame
+    }
+
+    @discardableResult
+    private func moveDefaultGroupToTop() -> Bool {
+        guard let defaultIndex = groups.firstIndex(where: isDefaultGroup) else { return false }
+        guard defaultIndex != 0 else { return false }
+
+        let defaultGroup = groups.remove(at: defaultIndex)
+        groups.insert(defaultGroup, at: 0)
+        return true
     }
 
     private func save() {

@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ContentView: View {
     @EnvironmentObject private var settings: AppSettings
@@ -6,6 +7,7 @@ struct ContentView: View {
     @State private var showingNewTask = false
     @State private var showingNewGroup = false
     @State private var newGroupName = ""
+    @State private var draggedGroupID: UUID?
 
     var body: some View {
         NavigationStack {
@@ -102,9 +104,26 @@ struct ContentView: View {
         ScrollView {
             LazyVStack(spacing: 18, pinnedViews: [.sectionHeaders]) {
                 ForEach(store.groups) { group in
-                    GroupSectionView(group: group)
+                    GroupSectionView(
+                        group: group,
+                        showsReorderHandle: store.canReorderGroup(group),
+                        reservesReorderHandleSpace: store.groups.count > 1,
+                        onDragGroup: store.canReorderGroup(group) ? {
+                            draggedGroupID = group.id
+                            return NSItemProvider(object: group.id.uuidString as NSString)
+                        } : nil
+                    )
                         .environmentObject(settings)
                         .environmentObject(store)
+                        .opacity(draggedGroupID == group.id ? 0.65 : 1)
+                        .onDrop(
+                            of: [UTType.plainText],
+                            delegate: GroupReorderDropDelegate(
+                                targetGroupID: group.id,
+                                store: store,
+                                draggedGroupID: $draggedGroupID
+                            )
+                        )
                 }
             }
             .padding(20)
@@ -129,5 +148,36 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct GroupReorderDropDelegate: DropDelegate {
+    let targetGroupID: UUID
+    let store: TaskStore
+    @Binding var draggedGroupID: UUID?
+
+    func dropEntered(info: DropInfo) {
+        guard let draggedGroupID, draggedGroupID != targetGroupID else { return }
+        guard let sourceIndex = store.groups.firstIndex(where: { $0.id == draggedGroupID }) else { return }
+        guard let targetIndex = store.groups.firstIndex(where: { $0.id == targetGroupID }) else { return }
+
+        let destination = sourceIndex < targetIndex ? targetIndex + 1 : targetIndex
+        withAnimation(.snappy(duration: 0.18)) {
+            store.moveGroup(id: draggedGroupID, to: destination)
+        }
+    }
+
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        DropProposal(operation: .move)
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        draggedGroupID = nil
+        return true
+    }
+
+    func dropExited(info: DropInfo) {
+        guard !info.hasItemsConforming(to: [UTType.plainText]) else { return }
+        draggedGroupID = nil
     }
 }

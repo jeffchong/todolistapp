@@ -8,6 +8,16 @@ This project follows a simple human-readable changelog format.
 
 - No unreleased changes yet.
 
+## 0.3.0-alpha.1 - 2026-05-14
+
+- Prepared the third alpha release for tester distribution.
+- Bumped the app marketing version to `0.3` and build number to `3`.
+- Added drag-and-drop custom group reordering in the main window while keeping `General` pinned at the top.
+- Persisted manual group ordering across reloads and repaired older saved data where `General` was not first.
+- Added menu bar task detail popovers for status, priority, due date, notes, and links.
+- Added tests covering group reordering, order persistence, and legacy group-order repair.
+- Refreshed release and tester documentation for the `0.3` alpha.
+
 ## 0.2.0-alpha.1 - 2026-05-14
 
 - Prepared the second alpha release for tester distribution.

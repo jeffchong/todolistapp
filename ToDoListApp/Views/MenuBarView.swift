@@ -11,6 +11,7 @@ struct MenuBarView: View {
     @State private var isCreatingGroup = false
     @State private var newGroupName = ""
     @State private var selectedGroupID: UUID?
+    @State private var detailTask: TaskItem?
 
     var body: some View {
         ZStack {
@@ -333,6 +334,30 @@ struct MenuBarView: View {
                     .font(settings.appFont(size: 11))
                     .foregroundStyle(.secondary)
             }
+
+            Button {
+                detailTask = task
+            } label: {
+                Label("Details", systemImage: "info.circle")
+            }
+            .labelStyle(.iconOnly)
+            .buttonStyle(.borderless)
+            .help("View task details")
+            .popover(
+                isPresented: Binding(
+                    get: { detailTask?.id == task.id },
+                    set: { isPresented in
+                        if !isPresented {
+                            detailTask = nil
+                        }
+                    }
+                ),
+                arrowEdge: .trailing
+            ) {
+                MenuBarTaskDetailsView(task: detailTask ?? task)
+                    .environmentObject(settings)
+                    .environmentObject(store)
+            }
         }
         .padding(8)
         .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 8))
@@ -376,6 +401,92 @@ struct MenuBarView: View {
         newGroupName = ""
         withAnimation(.snappy(duration: 0.16)) {
             isCreatingGroup = false
+        }
+    }
+}
+
+private struct MenuBarTaskDetailsView: View {
+    @EnvironmentObject private var settings: AppSettings
+    @EnvironmentObject private var store: TaskStore
+    let task: TaskItem
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 8) {
+                Image(systemName: task.status.systemImage)
+                    .foregroundStyle(task.status.color)
+                    .frame(width: 18)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(task.title)
+                        .font(settings.appFont(size: 13, weight: .semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text(store.groupName(for: task.groupID))
+                        .font(settings.appFont(size: 11))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 8) {
+                detailRow("Status", systemImage: task.status.systemImage, value: task.status.rawValue)
+                detailRow("Priority", systemImage: task.priority.systemImage, value: task.priority.rawValue)
+
+                if let dueDate = task.dueDate {
+                    detailRow(
+                        "Due",
+                        systemImage: "calendar",
+                        value: dueDate.formatted(date: .abbreviated, time: .omitted)
+                    )
+                }
+            }
+
+            if !task.notes.isEmpty {
+                Divider()
+
+                Text(task.notes)
+                    .font(settings.appFont(size: 12))
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .textSelection(.enabled)
+            } else if task.dueDate == nil && task.link == nil {
+                Text("No additional details")
+                    .font(settings.appFont(size: 12))
+                    .foregroundStyle(.secondary)
+            }
+
+            if let link = task.link {
+                Divider()
+
+                Link(destination: link) {
+                    Label(link.host(percentEncoded: false) ?? "Open Link", systemImage: "link")
+                        .font(settings.appFont(size: 12, weight: .medium))
+                        .lineLimit(1)
+                }
+            }
+        }
+        .padding(14)
+        .frame(width: 300, alignment: .leading)
+    }
+
+    private func detailRow(_ label: String, systemImage: String, value: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: systemImage)
+                .foregroundStyle(.secondary)
+                .frame(width: 16)
+
+            Text(label)
+                .font(settings.appFont(size: 11, weight: .semibold))
+                .foregroundStyle(.secondary)
+                .frame(width: 48, alignment: .leading)
+
+            Text(value)
+                .font(settings.appFont(size: 12))
+                .foregroundStyle(.primary)
+                .lineLimit(1)
         }
     }
 }

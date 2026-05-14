@@ -1,15 +1,15 @@
 # Release Checklist
 
-Use this checklist when preparing a `0.2` alpha build for testers.
+Use this checklist when preparing a `0.3` alpha build for testers.
 
 ## Version
 
-- Confirm `MARKETING_VERSION` is `0.2`.
+- Confirm `MARKETING_VERSION` is `0.3`.
 - Confirm the app bundle identifier is `com.jeffchong.todolist`.
-- Confirm `CURRENT_PROJECT_VERSION` is `2`, or increment it if you are replacing a prior `0.2` tester build.
+- Confirm `CURRENT_PROJECT_VERSION` is `3`, or increment it if you are replacing a prior `0.3` tester build.
 - Add release notes to `CHANGELOG.md`.
 - Confirm README status and tester docs match the release.
-- Confirm `docs/RELEASE_NOTES_0.2_ALPHA.md` matches the GitHub Release draft.
+- Confirm `docs/RELEASE_NOTES_0.3_ALPHA.md` matches the GitHub Release draft.
 
 ## Validation
 
@@ -72,19 +72,19 @@ For this first trusted-tester alpha, an unsigned Release build can be zipped loc
 Suggested title:
 
 ```text
-To-Do List 0.2 Alpha 1
+To-Do List 0.3 Alpha 1
 ```
 
 Suggested tag:
 
 ```text
-v0.2.0-alpha.1
+v0.3.0-alpha.1
 ```
 
 Suggested release notes:
 
 ```text
-Second alpha release for external testing.
+Third alpha release for external testing.
 
 Highlights:
 - Native macOS SwiftUI app with main window and menu bar utility.
@@ -92,6 +92,8 @@ Highlights:
 - Menu bar quick-add and status updates.
 - Optional app font, background image, launch-at-login, reset, and daily reminder settings.
 - Visible version/build labels in the main window and menu bar for easier feedback.
+- Drag-and-drop custom group reordering with `General` pinned at the top.
+- Menu bar task detail popovers for status, priority, due date, notes, and links.
 
 Known limitations:
 - Cloud sync is not active yet.
