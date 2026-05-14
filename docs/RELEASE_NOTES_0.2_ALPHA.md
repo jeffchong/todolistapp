@@ -20,7 +20,7 @@ Second alpha release for external testing.
 - Cloud sync is not active yet.
 - Data is local to the current Mac.
 - Import/export is not implemented yet.
-- Unsigned builds may require testers to bypass macOS Gatekeeper after verifying the release source.
+- This alpha is ad-hoc signed but not notarized. Testers may need to right-click/control-click **Open** the first time after verifying the release source.
 
 ## Tester Feedback
 
