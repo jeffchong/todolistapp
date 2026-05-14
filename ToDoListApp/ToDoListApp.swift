@@ -49,3 +49,38 @@ struct ToDoListApp: App {
 extension Notification.Name {
     static let showNewTaskSheet = Notification.Name("showNewTaskSheet")
 }
+
+enum AppVersionDisplay {
+    static var shortVersion: String {
+        formatVersion(version)
+    }
+
+    static var versionAndBuild: String {
+        "\(shortVersion) (\(build))"
+    }
+
+    private static var version: String {
+        let bundleVersion = Bundle.main
+            .object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+
+        guard let bundleVersion, !bundleVersion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return "0.2"
+        }
+
+        return bundleVersion
+    }
+
+    private static var build: String {
+        let bundleBuild = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+
+        guard let bundleBuild, !bundleBuild.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return "2"
+        }
+
+        return bundleBuild
+    }
+
+    private static func formatVersion(_ version: String) -> String {
+        return version.hasPrefix("v") ? version : "v\(version)"
+    }
+}

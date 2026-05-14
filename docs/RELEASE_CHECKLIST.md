@@ -1,14 +1,15 @@
 # Release Checklist
 
-Use this checklist when preparing a `0.1` alpha build for testers.
+Use this checklist when preparing a `0.2` alpha build for testers.
 
 ## Version
 
-- Confirm `MARKETING_VERSION` is `0.1`.
+- Confirm `MARKETING_VERSION` is `0.2`.
 - Confirm the app bundle identifier is `com.jeffchong.todolist`.
-- Increment `CURRENT_PROJECT_VERSION` for each shared build.
+- Confirm `CURRENT_PROJECT_VERSION` is `2`, or increment it if you are replacing a prior `0.2` tester build.
 - Add release notes to `CHANGELOG.md`.
 - Confirm README status and tester docs match the release.
+- Confirm `docs/RELEASE_NOTES_0.2_ALPHA.md` matches the GitHub Release draft.
 
 ## Validation
 
@@ -71,25 +72,26 @@ For this first trusted-tester alpha, an unsigned Release build can be zipped loc
 Suggested title:
 
 ```text
-To-Do List 0.1 Alpha 1
+To-Do List 0.2 Alpha 1
 ```
 
 Suggested tag:
 
 ```text
-v0.1.0-alpha.1
+v0.2.0-alpha.1
 ```
 
 Suggested release notes:
 
 ```text
-First alpha release for external testing.
+Second alpha release for external testing.
 
 Highlights:
 - Native macOS SwiftUI app with main window and menu bar utility.
 - Local groups and tasks with status, priority, due date, description, and link fields.
 - Menu bar quick-add and status updates.
 - Optional app font, background image, launch-at-login, reset, and daily reminder settings.
+- Visible version/build labels in the main window and menu bar for easier feedback.
 
 Known limitations:
 - Cloud sync is not active yet.

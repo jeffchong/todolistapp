@@ -16,11 +16,13 @@ struct ContentView: View {
                 VStack(spacing: 0) {
                     header
 
-                    if store.tasks.isEmpty {
+                    if store.groups.isEmpty {
                         emptyState
                     } else {
                         taskList
                     }
+
+                    footer
                 }
             }
             .navigationTitle("To-Do List")
@@ -79,6 +81,20 @@ struct ContentView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
+        .background(.bar)
+    }
+
+    private var footer: some View {
+        HStack {
+            Spacer()
+
+            Text(AppVersionDisplay.versionAndBuild)
+                .font(settings.appFont(size: 11, weight: .semibold))
+                .foregroundStyle(.secondary)
+                .help("App version \(AppVersionDisplay.versionAndBuild)")
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 8)
         .background(.bar)
     }
 

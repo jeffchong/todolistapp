@@ -1,10 +1,11 @@
-# To-Do List 0.1 Alpha Tester Guide
+# To-Do List 0.2 Alpha Tester Guide
 
-Thanks for trying the To-Do List alpha. This build is meant to validate the core local task workflow before cloud sync and broader distribution are finished.
+Thanks for trying the To-Do List alpha. This `0.2` build is meant to validate the core local task workflow before cloud sync and broader distribution are finished.
 
 ## What to Expect
 
 - Native macOS app with both a standard window and a menu bar utility.
+- App version/build shown in the main window and menu bar to make feedback easier to match to a build.
 - Local task and group management.
 - Optional due dates, links, descriptions, statuses, and priorities.
 - Daily 9:00 AM notifications for high-priority tasks and tasks due today.
@@ -45,7 +46,7 @@ Please try these workflows and note anything confusing, broken, or slower than e
 For each issue, include:
 
 - macOS version.
-- App version and build number.
+- App version and build number shown in the app, such as `v0.2 (2)`.
 - What you expected to happen.
 - What actually happened.
 - Steps to reproduce.

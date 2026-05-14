@@ -8,6 +8,14 @@ This project follows a simple human-readable changelog format.
 
 - No unreleased changes yet.
 
+## 0.2.0-alpha.1 - 2026-05-14
+
+- Prepared the second alpha release for tester distribution.
+- Bumped the app marketing version to `0.2` and build number to `2`.
+- Added visible app version/build labels in the main window and menu bar UI to make tester feedback easier to identify.
+- Updated the main window empty-state behavior so existing groups remain visible even when all tasks are complete or removed.
+- Refreshed release, security, and tester documentation for the `0.2` alpha.
+
 ## 0.1.0-alpha.1 - 2026-05-13
 
 - Prepared the first alpha release for external testing.

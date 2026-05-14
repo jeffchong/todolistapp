@@ -6,7 +6,8 @@ This app is in alpha. Security fixes should target the latest `main` branch unle
 
 | Version | Supported |
 | --- | --- |
-| `0.1.x-alpha` | Yes |
+| `0.2.x-alpha` | Yes |
+| `0.1.x-alpha` | No |
 | Earlier builds | No |
 
 ## Reporting a Vulnerability

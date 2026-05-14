@@ -150,12 +150,17 @@ struct MenuBarView: View {
                             .foregroundStyle(.secondary)
                             .help("\(store.openTasks.count) open tasks")
 
+                        Text(AppVersionDisplay.versionAndBuild)
+                            .font(settings.appFont(size: 10, weight: .semibold))
+                            .foregroundStyle(.secondary)
+                            .help("App version \(AppVersionDisplay.versionAndBuild)")
+
                         Image(systemName: cloudSyncStatus.systemImage)
                             .font(settings.appFont(size: 12, weight: .semibold))
                             .foregroundStyle(cloudSyncStatus.color)
                             .help(cloudSyncStatus.helpText)
                     }
-                    .frame(minWidth: 92)
+                    .frame(minWidth: 132)
 
                     Spacer()
 
