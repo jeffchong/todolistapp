@@ -8,6 +8,16 @@ This project follows a simple human-readable changelog format.
 
 - No unreleased changes yet.
 
+## 0.4.0-alpha.1 - 2026-05-25
+
+- Prepared the fourth alpha release for tester distribution.
+- Bumped the app marketing version to `0.4` and build number to `4`.
+- Fixed the menu bar settings button so it opens the Settings window reliably.
+- Added a group options popover in the main window for renaming groups, changing group colors, and deleting custom groups.
+- Kept `General` protected from deletion and moved tasks from deleted custom groups back into `General`.
+- Added tests covering group renaming and default-group deletion protection.
+- Refreshed release and tester documentation for the `0.4` alpha.
+
 ## 0.3.0-alpha.1 - 2026-05-14
 
 - Prepared the third alpha release for tester distribution.

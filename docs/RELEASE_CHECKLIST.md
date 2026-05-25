@@ -1,15 +1,15 @@
 # Release Checklist
 
-Use this checklist when preparing a `0.3` alpha build for testers.
+Use this checklist when preparing a `0.4` alpha build for testers.
 
 ## Version
 
-- Confirm `MARKETING_VERSION` is `0.3`.
+- Confirm `MARKETING_VERSION` is `0.4`.
 - Confirm the app bundle identifier is `com.jeffchong.todolist`.
-- Confirm `CURRENT_PROJECT_VERSION` is `3`, or increment it if you are replacing a prior `0.3` tester build.
+- Confirm `CURRENT_PROJECT_VERSION` is `4`, or increment it if you are replacing a prior `0.4` tester build.
 - Add release notes to `CHANGELOG.md`.
 - Confirm README status and tester docs match the release.
-- Confirm `docs/RELEASE_NOTES_0.3_ALPHA.md` matches the GitHub Release draft.
+- Confirm `docs/RELEASE_NOTES_0.4_ALPHA.md` matches the GitHub Release draft.
 
 ## Validation
 
@@ -45,6 +45,7 @@ xcodebuild build \
 
 - Launch the app and create a task.
 - Create a group and move/create a task in that group.
+- Rename a custom group, change its color, and delete it.
 - Edit task title, description, due date, link, status, and priority.
 - Confirm high-priority tasks sort above normal tasks.
 - Close the main window and open it again from the menu bar.
@@ -72,19 +73,19 @@ For this first trusted-tester alpha, an unsigned Release build can be zipped loc
 Suggested title:
 
 ```text
-To-Do List 0.3 Alpha 1
+To-Do List 0.4 Alpha 1
 ```
 
 Suggested tag:
 
 ```text
-v0.3.0-alpha.1
+v0.4.0-alpha.1
 ```
 
 Suggested release notes:
 
 ```text
-Third alpha release for external testing.
+Fourth alpha release for external testing.
 
 Highlights:
 - Native macOS SwiftUI app with main window and menu bar utility.
@@ -94,6 +95,8 @@ Highlights:
 - Visible version/build labels in the main window and menu bar for easier feedback.
 - Drag-and-drop custom group reordering with `General` pinned at the top.
 - Menu bar task detail popovers for status, priority, due date, notes, and links.
+- Main-window group options for renaming groups, changing colors, and deleting custom groups.
+- Menu bar settings button opens Settings reliably.
 
 Known limitations:
 - Cloud sync is not active yet.
