@@ -179,10 +179,24 @@ final class TaskStoreTests: XCTestCase {
     }
 
     @MainActor
+    func testRenamingGroupTrimsNameAndIgnoresBlankName() {
+        withFixture { store in
+            let project = store.addGroup(named: "Project")
+
+            store.renameGroup(project, to: "  Roadmap  ")
+            XCTAssertEqual(store.groups.first(where: { $0.id == project.id })?.name, "Roadmap")
+
+            store.renameGroup(project, to: "   ")
+            XCTAssertEqual(store.groups.first(where: { $0.id == project.id })?.name, "Roadmap")
+        }
+    }
+
+    @MainActor
     func testDeletingGeneralGroupIsIgnored() {
         withFixture { store in
             let general = store.groups[0]
 
+            XCTAssertFalse(store.canDeleteGroup(general))
             store.deleteGroup(general)
 
             XCTAssertEqual(store.groups.map(\.id), [general.id])

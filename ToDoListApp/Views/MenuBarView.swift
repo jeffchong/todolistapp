@@ -5,6 +5,7 @@ struct MenuBarView: View {
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var store: TaskStore
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.openSettings) private var openSettings
 
     @AppStorage("collapsedMenuBarGroupIDs") private var collapsedMenuBarGroupIDs = ""
     @State private var quickTitle = ""
@@ -135,8 +136,8 @@ struct MenuBarView: View {
 
                 HStack {
                     Button {
-                        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-                        NSApp.activate(ignoringOtherApps: true)
+                        AppWindowLifecycle.prepareToShowMainWindow()
+                        openSettings()
                     } label: {
                         Label("Settings", systemImage: "gearshape")
                     }

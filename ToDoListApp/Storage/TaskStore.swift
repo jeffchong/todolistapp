@@ -51,6 +51,10 @@ final class TaskStore: ObservableObject {
         !isDefaultGroup(group)
     }
 
+    func canDeleteGroup(_ group: TaskGroup) -> Bool {
+        !isDefaultGroup(group)
+    }
+
     func reminderTasks(for date: Date = .now) -> [TaskItem] {
         sorted(
             tasks.filter { task in
@@ -92,6 +96,16 @@ final class TaskStore: ObservableObject {
     func updateGroupColor(_ group: TaskGroup, colorHex: String) {
         guard let index = groups.firstIndex(where: { $0.id == group.id }) else { return }
         groups[index].colorHex = colorHex
+        save()
+    }
+
+    func renameGroup(_ group: TaskGroup, to name: String) {
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty else { return }
+        guard let index = groups.firstIndex(where: { $0.id == group.id }) else { return }
+        guard groups[index].name != trimmedName else { return }
+
+        groups[index].name = trimmedName
         save()
     }
 

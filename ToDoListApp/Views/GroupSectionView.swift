@@ -9,6 +9,7 @@ struct GroupSectionView: View {
     var onDragGroup: (() -> NSItemProvider)?
 
     @State private var showingNewTask = false
+    @State private var showingGroupOptions = false
 
     var body: some View {
         Section {
@@ -84,18 +85,19 @@ struct GroupSectionView: View {
 
             Spacer()
 
-            ColorPicker(
-                "Group color",
-                selection: Binding(
-                    get: { Color(hex: group.colorHex) },
-                    set: { store.updateGroupColor(group, colorHex: $0.hexString) }
-                ),
-                supportsOpacity: false
-            )
-            .labelsHidden()
-            .controlSize(.small)
-            .frame(width: 28)
-            .help("Group color")
+            Button {
+                showingGroupOptions = true
+            } label: {
+                Label("Group Options", systemImage: "ellipsis.circle")
+            }
+            .labelStyle(.iconOnly)
+            .buttonStyle(.borderless)
+            .help("Group options")
+            .popover(isPresented: $showingGroupOptions, arrowEdge: .bottom) {
+                GroupOptionsView(group: group)
+                    .environmentObject(settings)
+                    .environmentObject(store)
+            }
 
             Button {
                 showingNewTask = true
@@ -120,5 +122,87 @@ struct GroupSectionView: View {
         .onTapGesture(count: 2) {
             store.toggleGroupCollapsed(group)
         }
+    }
+}
+
+private struct GroupOptionsView: View {
+    @EnvironmentObject private var settings: AppSettings
+    @EnvironmentObject private var store: TaskStore
+    @Environment(\.dismiss) private var dismiss
+
+    let group: TaskGroup
+
+    @State private var groupName: String
+    @State private var showingDeleteConfirmation = false
+
+    init(group: TaskGroup) {
+        self.group = group
+        _groupName = State(initialValue: group.name)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Group Options")
+                .font(settings.appFont(size: 14, weight: .semibold))
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Name")
+                    .font(settings.appFont(size: 11, weight: .semibold))
+                    .foregroundStyle(.secondary)
+
+                HStack(spacing: 8) {
+                    TextField("Group name", text: $groupName)
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit(saveName)
+
+                    Button("Rename") {
+                        saveName()
+                    }
+                    .disabled(!canSaveName)
+                }
+            }
+
+            ColorPicker(
+                "Color",
+                selection: Binding(
+                    get: { Color(hex: group.colorHex) },
+                    set: { store.updateGroupColor(group, colorHex: $0.hexString) }
+                ),
+                supportsOpacity: false
+            )
+
+            Divider()
+
+            Button("Delete Group...", role: .destructive) {
+                showingDeleteConfirmation = true
+            }
+            .disabled(!store.canDeleteGroup(group))
+            .help(store.canDeleteGroup(group) ? "Delete this group" : "The General group cannot be deleted")
+        }
+        .padding(16)
+        .frame(width: 280, alignment: .leading)
+        .font(settings.appFont(size: 13))
+        .onChange(of: group.name) { _, newName in
+            groupName = newName
+        }
+        .alert("Delete \(group.name)?", isPresented: $showingDeleteConfirmation) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete Group", role: .destructive) {
+                store.deleteGroup(group)
+                dismiss()
+            }
+        } message: {
+            Text("Tasks in this group will move to General.")
+        }
+    }
+
+    private var canSaveName: Bool {
+        let trimmedName = groupName.trimmingCharacters(in: .whitespacesAndNewlines)
+        return !trimmedName.isEmpty && trimmedName != group.name
+    }
+
+    private func saveName() {
+        guard canSaveName else { return }
+        store.renameGroup(group, to: groupName)
     }
 }
