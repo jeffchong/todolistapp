@@ -23,6 +23,11 @@ final class AppSettings: ObservableObject {
             objectWillChange.send()
         }
     }
+    @AppStorage("showCompletedTasksInMainWindow") var showCompletedTasksInMainWindow = false {
+        willSet {
+            objectWillChange.send()
+        }
+    }
     @AppStorage("backgroundImageOpacity") var backgroundImageOpacity = 0.28 {
         willSet {
             objectWillChange.send()

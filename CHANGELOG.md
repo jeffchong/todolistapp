@@ -8,6 +8,16 @@ This project follows a simple human-readable changelog format.
 
 - No unreleased changes yet.
 
+## 0.5.0-alpha.1 - 2026-06-01
+
+- Prepared the fifth alpha release for tester distribution.
+- Bumped the app marketing version to `0.5` and build number to `5`.
+- Hid completed tasks in the main window by default.
+- Added a View menu toggle, **Show Completed Items**, to reveal or hide completed tasks in the main window.
+- Updated empty group messaging to distinguish between no tasks and no open tasks.
+- Updated the menu bar app window so opening the full main window dismisses the menu bar window, making the transition feel like switching views.
+- Refreshed release and tester documentation for the `0.5` alpha.
+
 ## 0.4.0-alpha.1 - 2026-05-25
 
 - Prepared the fourth alpha release for tester distribution.

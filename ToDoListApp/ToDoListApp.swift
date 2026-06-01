@@ -28,6 +28,10 @@ struct ToDoListApp: App {
                 }
                 .keyboardShortcut("q")
             }
+
+            CommandGroup(after: .toolbar) {
+                Toggle("Show Completed Items", isOn: $settings.showCompletedTasksInMainWindow)
+            }
         }
 
         MenuBarExtra("To-Do List", systemImage: "checklist") {
@@ -64,7 +68,7 @@ enum AppVersionDisplay {
             .object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
 
         guard let bundleVersion, !bundleVersion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return "0.4"
+            return "0.5"
         }
 
         return bundleVersion
@@ -74,7 +78,7 @@ enum AppVersionDisplay {
         let bundleBuild = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
 
         guard let bundleBuild, !bundleBuild.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return "4"
+            return "5"
         }
 
         return bundleBuild

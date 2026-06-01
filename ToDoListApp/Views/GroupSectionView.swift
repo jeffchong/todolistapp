@@ -13,12 +13,12 @@ struct GroupSectionView: View {
 
     var body: some View {
         Section {
-            let tasks = store.tasks(for: group)
+            let tasks = settings.showCompletedTasksInMainWindow ? store.tasks(for: group) : store.openTasks(for: group)
             if group.isCollapsed {
                 EmptyView()
             } else if tasks.isEmpty {
                 HStack {
-                    Text("No tasks")
+                    Text(settings.showCompletedTasksInMainWindow ? "No tasks" : "No open tasks")
                         .foregroundStyle(.secondary)
                     Spacer()
                 }

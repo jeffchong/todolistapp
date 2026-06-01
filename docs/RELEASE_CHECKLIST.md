@@ -1,15 +1,15 @@
 # Release Checklist
 
-Use this checklist when preparing a `0.4` alpha build for testers.
+Use this checklist when preparing a `0.5` alpha build for testers.
 
 ## Version
 
-- Confirm `MARKETING_VERSION` is `0.4`.
+- Confirm `MARKETING_VERSION` is `0.5`.
 - Confirm the app bundle identifier is `com.jeffchong.todolist`.
-- Confirm `CURRENT_PROJECT_VERSION` is `4`, or increment it if you are replacing a prior `0.4` tester build.
+- Confirm `CURRENT_PROJECT_VERSION` is `5`, or increment it if you are replacing a prior `0.5` tester build.
 - Add release notes to `CHANGELOG.md`.
 - Confirm README status and tester docs match the release.
-- Confirm `docs/RELEASE_NOTES_0.4_ALPHA.md` matches the GitHub Release draft.
+- Confirm `docs/RELEASE_NOTES_0.5_ALPHA.md` matches the GitHub Release draft.
 
 ## Validation
 
@@ -48,7 +48,10 @@ xcodebuild build \
 - Rename a custom group, change its color, and delete it.
 - Edit task title, description, due date, link, status, and priority.
 - Confirm high-priority tasks sort above normal tasks.
+- Complete a task and confirm it is hidden by default in the main window.
+- Toggle **View > Show Completed Items** and confirm completed tasks appear and hide again.
 - Close the main window and open it again from the menu bar.
+- Open the full window from the menu bar and confirm the menu bar window dismisses.
 - Add a task from the menu bar.
 - Change a task status from the menu bar.
 - Open settings.
@@ -66,26 +69,26 @@ xcodebuild build \
 - Attach or link the alpha tester guide with the build.
 - Keep a copy of the exact zip that was shared.
 
-For this first trusted-tester alpha, an unsigned Release build can be zipped locally and attached to GitHub Releases. This is acceptable for a tiny known group, but it will create Gatekeeper friction and is not a good long-term distribution path.
+For a small trusted-tester alpha, an unsigned Release build can be zipped locally and attached to GitHub Releases. This is acceptable for a tiny known group, but it will create Gatekeeper friction and is not a good long-term distribution path.
 
 ## GitHub Release Draft
 
 Suggested title:
 
 ```text
-To-Do List 0.4 Alpha 1
+To-Do List 0.5 Alpha 1
 ```
 
 Suggested tag:
 
 ```text
-v0.4.0-alpha.1
+v0.5.0-alpha.1
 ```
 
 Suggested release notes:
 
 ```text
-Fourth alpha release for external testing.
+Fifth alpha release for external testing.
 
 Highlights:
 - Native macOS SwiftUI app with main window and menu bar utility.
@@ -97,6 +100,8 @@ Highlights:
 - Menu bar task detail popovers for status, priority, due date, notes, and links.
 - Main-window group options for renaming groups, changing colors, and deleting custom groups.
 - Menu bar settings button opens Settings reliably.
+- Completed tasks are hidden in the main window by default, with a View menu toggle to show or hide them.
+- Opening the full main window from the menu bar dismisses the menu bar window.
 
 Known limitations:
 - Cloud sync is not active yet.

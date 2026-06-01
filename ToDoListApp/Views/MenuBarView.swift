@@ -4,6 +4,7 @@ import SwiftUI
 struct MenuBarView: View {
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var store: TaskStore
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.openWindow) private var openWindow
     @Environment(\.openSettings) private var openSettings
 
@@ -34,6 +35,7 @@ struct MenuBarView: View {
                     Button {
                         AppWindowLifecycle.prepareToShowMainWindow()
                         openWindow(id: "main")
+                        dismiss()
                     } label: {
                         Label("Open", systemImage: "macwindow")
                     }

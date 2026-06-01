@@ -1,6 +1,6 @@
-# To-Do List 0.4 Alpha Tester Guide
+# To-Do List 0.5 Alpha Tester Guide
 
-Thanks for trying the To-Do List alpha. This `0.4` build is meant to validate the core local task workflow before cloud sync and broader distribution are finished.
+Thanks for trying the To-Do List alpha. This `0.5` build is meant to validate the core local task workflow before cloud sync and broader distribution are finished.
 
 ## What to Expect
 
@@ -9,7 +9,9 @@ Thanks for trying the To-Do List alpha. This `0.4` build is meant to validate th
 - Local task and group management.
 - Drag-and-drop custom group reordering in the main window.
 - Group options in the main window for renaming groups, changing colors, and deleting custom groups.
+- Completed tasks are hidden in the main window by default and can be shown from the View menu.
 - Menu bar task detail popovers.
+- Opening the full window from the menu bar dismisses the menu bar window.
 - Optional due dates, links, descriptions, statuses, and priorities.
 - Daily 9:00 AM notifications for high-priority tasks and tasks due today.
 - Local JSON persistence in Application Support.
@@ -40,8 +42,10 @@ Please try these workflows and note anything confusing, broken, or slower than e
 - Create tasks with and without due dates.
 - Add high-priority tasks and confirm they sort above normal tasks.
 - Change task statuses from both the main window and menu bar.
+- Complete a task, confirm it hides from the main window by default, then use **View > Show Completed Items** to show it again.
 - Add a link to a task and confirm it opens.
 - Close the main window and keep using the menu bar app.
+- Open the full window from the menu bar and confirm the menu bar window dismisses.
 - Open settings and try font selection, launch at login, and background image settings.
 - Reset task data from settings if you want to start over.
 - Leave the app running across a restart or overnight and confirm data is still present.
@@ -51,7 +55,7 @@ Please try these workflows and note anything confusing, broken, or slower than e
 For each issue, include:
 
 - macOS version.
-- App version and build number shown in the app, such as `v0.4 (4)`.
+- App version and build number shown in the app, such as `v0.5 (5)`.
 - What you expected to happen.
 - What actually happened.
 - Steps to reproduce.
