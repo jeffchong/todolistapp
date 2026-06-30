@@ -8,6 +8,13 @@ This project follows a simple human-readable changelog format.
 
 - No unreleased changes yet.
 
+## 0.6.0-alpha.1 - 2026-06-30
+
+- Prepared the sixth alpha release for tester distribution.
+- Bumped the app marketing version to `0.6` and build number to `6`.
+- Added priority editing to menu bar task detail popovers.
+- Refreshed release and tester documentation for the `0.6` alpha.
+
 ## 0.5.0-alpha.1 - 2026-06-01
 
 - Prepared the fifth alpha release for tester distribution.

@@ -68,7 +68,7 @@ enum AppVersionDisplay {
             .object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
 
         guard let bundleVersion, !bundleVersion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return "0.5"
+            return "0.6"
         }
 
         return bundleVersion
@@ -78,7 +78,7 @@ enum AppVersionDisplay {
         let bundleBuild = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
 
         guard let bundleBuild, !bundleBuild.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return "5"
+            return "6"
         }
 
         return bundleBuild

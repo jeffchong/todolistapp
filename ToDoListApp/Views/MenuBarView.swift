@@ -357,7 +357,7 @@ struct MenuBarView: View {
                 ),
                 arrowEdge: .trailing
             ) {
-                MenuBarTaskDetailsView(task: detailTask ?? task)
+                MenuBarTaskDetailsView(taskID: task.id, fallbackTask: detailTask ?? task)
                     .environmentObject(settings)
                     .environmentObject(store)
             }
@@ -411,9 +411,12 @@ struct MenuBarView: View {
 private struct MenuBarTaskDetailsView: View {
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var store: TaskStore
-    let task: TaskItem
+    let taskID: UUID
+    let fallbackTask: TaskItem
 
     var body: some View {
+        let task = currentTask
+
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 8) {
                 Image(systemName: task.status.systemImage)
@@ -436,7 +439,7 @@ private struct MenuBarTaskDetailsView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 detailRow("Status", systemImage: task.status.systemImage, value: task.status.rawValue)
-                detailRow("Priority", systemImage: task.priority.systemImage, value: task.priority.rawValue)
+                priorityRow(task)
 
                 if let dueDate = task.dueDate {
                     detailRow(
@@ -473,6 +476,43 @@ private struct MenuBarTaskDetailsView: View {
         }
         .padding(14)
         .frame(width: 300, alignment: .leading)
+    }
+
+    private var currentTask: TaskItem {
+        store.tasks.first(where: { $0.id == taskID }) ?? fallbackTask
+    }
+
+    private var priorityBinding: Binding<TaskPriority> {
+        Binding(
+            get: { currentTask.priority },
+            set: { newPriority in
+                store.updatePriority(for: currentTask, to: newPriority)
+            }
+        )
+    }
+
+    private func priorityRow(_ task: TaskItem) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: task.priority.systemImage)
+                .foregroundStyle(task.priority.color)
+                .frame(width: 16)
+
+            Text("Priority")
+                .font(settings.appFont(size: 11, weight: .semibold))
+                .foregroundStyle(.secondary)
+                .frame(width: 48, alignment: .leading)
+
+            Picker("Priority", selection: priorityBinding) {
+                ForEach(TaskPriority.allCases) { priority in
+                    Label(priority.rawValue, systemImage: priority.systemImage)
+                        .tag(priority)
+                }
+            }
+            .labelsHidden()
+            .pickerStyle(.menu)
+            .controlSize(.small)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 
     private func detailRow(_ label: String, systemImage: String, value: String) -> some View {

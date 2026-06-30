@@ -3,7 +3,7 @@
 ![Swift](https://img.shields.io/badge/Swift-6.0-FA7343?logo=swift&logoColor=white)
 ![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-0D96F6?logo=swift&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-macOS-000000?logo=apple&logoColor=white)
-![Release](https://img.shields.io/badge/Release-0.5%20alpha-orange)
+![Release](https://img.shields.io/badge/Release-0.6%20alpha-orange)
 ![Xcode](https://img.shields.io/badge/Xcode-Project-147EFB?logo=xcode&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![CI](https://github.com/jeffchong/todolistapp/actions/workflows/ci.yml/badge.svg)
@@ -33,6 +33,7 @@ The app is intentionally lightweight: tasks are grouped by project, can be manag
 - Expandable/collapsible group sections with per-group colors.
 - Completed tasks are hidden in the main window by default, with a View menu toggle to show them when needed.
 - Menu bar quick-add flow for tasks and groups.
+- Menu bar task detail popovers include priority editing.
 - Opening the full main window from the menu bar dismisses the menu bar window for a cleaner view switch.
 - Optional blurred/faded background images for the main window and menu bar window.
 - Configurable app font, defaulting to SF Mono.
@@ -43,7 +44,7 @@ The app is intentionally lightweight: tasks are grouped by project, can be manag
 
 ## Project Status
 
-This is an alpha macOS app. Version `0.5` is intended for early testers who are comfortable with a local-first productivity app that may still change shape.
+This is an alpha macOS app. Version `0.6` is intended for early testers who are comfortable with a local-first productivity app that may still change shape.
 
 Local task management is functional. Cloud sync is currently represented by provider scaffolding:
 
@@ -56,7 +57,7 @@ For release prep and tester-facing notes, see:
 
 - [Alpha tester guide](docs/ALPHA_TESTER_GUIDE.md)
 - [Release checklist](docs/RELEASE_CHECKLIST.md)
-- [0.5 alpha release notes](docs/RELEASE_NOTES_0.5_ALPHA.md)
+- [0.6 alpha release notes](docs/RELEASE_NOTES_0.6_ALPHA.md)
 
 ## Requirements
 
@@ -92,12 +93,12 @@ After building, the debug app bundle is usually available at:
 
 ## Create an Alpha Build
 
-For the `0.5` alpha, use a signed Release build from Xcode when sharing with testers.
+For the `0.6` alpha, use a signed Release build from Xcode when sharing with testers.
 
 1. Open `ToDoListApp.xcodeproj`.
 2. Select the `ToDoListApp` target.
 3. Set your development team.
-4. Confirm the marketing version is `0.5` and increment the build number if you are replacing a prior tester build.
+4. Confirm the marketing version is `0.6` and increment the build number if you are replacing a prior tester build.
 5. Choose **Product > Archive**.
 6. Export a signed Developer ID or development build appropriate for your tester group.
 7. Share the app together with the [alpha tester guide](docs/ALPHA_TESTER_GUIDE.md).

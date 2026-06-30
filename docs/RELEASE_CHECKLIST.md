@@ -1,15 +1,15 @@
 # Release Checklist
 
-Use this checklist when preparing a `0.5` alpha build for testers.
+Use this checklist when preparing a `0.6` alpha build for testers.
 
 ## Version
 
-- Confirm `MARKETING_VERSION` is `0.5`.
+- Confirm `MARKETING_VERSION` is `0.6`.
 - Confirm the app bundle identifier is `com.jeffchong.todolist`.
-- Confirm `CURRENT_PROJECT_VERSION` is `5`, or increment it if you are replacing a prior `0.5` tester build.
+- Confirm `CURRENT_PROJECT_VERSION` is `6`, or increment it if you are replacing a prior `0.6` tester build.
 - Add release notes to `CHANGELOG.md`.
 - Confirm README status and tester docs match the release.
-- Confirm `docs/RELEASE_NOTES_0.5_ALPHA.md` matches the GitHub Release draft.
+- Confirm `docs/RELEASE_NOTES_0.6_ALPHA.md` matches the GitHub Release draft.
 
 ## Validation
 
@@ -54,6 +54,7 @@ xcodebuild build \
 - Open the full window from the menu bar and confirm the menu bar window dismisses.
 - Add a task from the menu bar.
 - Change a task status from the menu bar.
+- Change a task priority from the menu bar task detail popover.
 - Open settings.
 - Toggle launch at login and confirm any macOS approval prompt or status.
 - Select and clear a background image.
@@ -76,24 +77,25 @@ For a small trusted-tester alpha, an unsigned Release build can be zipped locall
 Suggested title:
 
 ```text
-To-Do List 0.5 Alpha 1
+To-Do List 0.6 Alpha 1
 ```
 
 Suggested tag:
 
 ```text
-v0.5.0-alpha.1
+v0.6.0-alpha.1
 ```
 
 Suggested release notes:
 
 ```text
-Fifth alpha release for external testing.
+Sixth alpha release for external testing.
 
 Highlights:
 - Native macOS SwiftUI app with main window and menu bar utility.
 - Local groups and tasks with status, priority, due date, description, and link fields.
 - Menu bar quick-add and status updates.
+- Menu bar task detail popovers now support priority changes.
 - Optional app font, background image, launch-at-login, reset, and daily reminder settings.
 - Visible version/build labels in the main window and menu bar for easier feedback.
 - Drag-and-drop custom group reordering with `General` pinned at the top.
