@@ -28,6 +28,21 @@ final class AppSettings: ObservableObject {
             objectWillChange.send()
         }
     }
+    @AppStorage("dailyNotificationsEnabled") var dailyNotificationsEnabled = false {
+        willSet {
+            objectWillChange.send()
+        }
+    }
+    @AppStorage("dailyNotificationHour") var dailyNotificationHour = 9 {
+        willSet {
+            objectWillChange.send()
+        }
+    }
+    @AppStorage("dailyNotificationMinute") var dailyNotificationMinute = 0 {
+        willSet {
+            objectWillChange.send()
+        }
+    }
     @AppStorage("backgroundImageOpacity") var backgroundImageOpacity = 0.28 {
         willSet {
             objectWillChange.send()
@@ -61,6 +76,24 @@ final class AppSettings: ObservableObject {
     var backgroundImageURL: URL? {
         guard !backgroundImagePath.isEmpty else { return nil }
         return URL(fileURLWithPath: backgroundImagePath)
+    }
+
+    var dailyNotificationTime: Date {
+        get {
+            let calendar = Calendar.current
+            let startOfToday = calendar.startOfDay(for: .now)
+            return calendar.date(
+                bySettingHour: dailyNotificationHour,
+                minute: dailyNotificationMinute,
+                second: 0,
+                of: startOfToday
+            ) ?? startOfToday
+        }
+        set {
+            let components = Calendar.current.dateComponents([.hour, .minute], from: newValue)
+            dailyNotificationHour = components.hour ?? 9
+            dailyNotificationMinute = components.minute ?? 0
+        }
     }
 
     var hasBackgroundImage: Bool {

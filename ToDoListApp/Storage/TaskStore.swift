@@ -5,6 +5,7 @@ import UserNotifications
 final class TaskStore: ObservableObject {
     @Published private(set) var groups: [TaskGroup] = []
     @Published private(set) var tasks: [TaskItem] = []
+    @Published private(set) var notificationAuthorizationStatus: UNAuthorizationStatus = .notDetermined
     @Published var lastError: String?
 
     private let storage: TaskStorage
@@ -15,6 +16,19 @@ final class TaskStore: ObservableObject {
         reminderScheduler = startsReminderScheduler ? TaskReminderScheduler() : nil
         load()
         reminderScheduler?.start(store: self)
+    }
+
+    @discardableResult
+    func configureDailyNotifications(isEnabled: Bool, hour: Int, minute: Int) async -> Bool {
+        guard let reminderScheduler else { return false }
+
+        let status = await reminderScheduler.configure(
+            isEnabled: isEnabled,
+            hour: hour,
+            minute: minute
+        )
+        notificationAuthorizationStatus = status
+        return status == .authorized || status == .provisional
     }
 
     var defaultGroupID: UUID {
@@ -352,34 +366,56 @@ final class TaskStorage {
 private final class TaskReminderScheduler {
     private weak var store: TaskStore?
     private var timer: Timer?
+    private var isEnabled = false
+    private var reminderHour = 9
+    private var reminderMinute = 0
 
     func start(store: TaskStore) {
         self.store = store
-        Task {
-            await requestNotificationPermissionIfNeeded()
-            scheduleNextReminder()
-        }
     }
 
-    private func requestNotificationPermissionIfNeeded() async {
+    func configure(isEnabled: Bool, hour: Int, minute: Int) async -> UNAuthorizationStatus {
+        self.isEnabled = isEnabled
+        reminderHour = min(max(hour, 0), 23)
+        reminderMinute = min(max(minute, 0), 59)
+
+        var authorizationStatus = await notificationAuthorizationStatus()
+        if isEnabled && authorizationStatus == .notDetermined {
+            authorizationStatus = await requestNotificationPermission()
+        }
+
+        if isEnabled && (authorizationStatus == .authorized || authorizationStatus == .provisional) {
+            scheduleNextReminder()
+        } else {
+            timer?.invalidate()
+            timer = nil
+        }
+
+        return authorizationStatus
+    }
+
+    private func requestNotificationPermission() async -> UNAuthorizationStatus {
         let center = UNUserNotificationCenter.current()
-        let authorizationStatus = await notificationAuthorizationStatus()
-        guard authorizationStatus == .notDetermined else { return }
 
         do {
             _ = try await center.requestAuthorization(options: [.alert, .sound])
         } catch {
             store?.lastError = error.localizedDescription
         }
+
+        return await notificationAuthorizationStatus()
     }
 
     private func scheduleNextReminder() {
         timer?.invalidate()
 
-        let nextReminderDate = nextNineAM(after: .now)
+        guard isEnabled else { return }
+
+        let nextReminderDate = nextReminderDate(after: .now)
         let interval = max(nextReminderDate.timeIntervalSinceNow, 1)
         let timer = Timer(timeInterval: interval, repeats: false) { [weak self] _ in
             Task { @MainActor in
+                guard self?.isEnabled == true else { return }
                 await self?.publishReminders()
                 self?.scheduleNextReminder()
             }
@@ -388,18 +424,19 @@ private final class TaskReminderScheduler {
         self.timer = timer
     }
 
-    private func nextNineAM(after date: Date) -> Date {
+    private func nextReminderDate(after date: Date) -> Date {
         let calendar = Calendar.current
         var components = calendar.dateComponents([.year, .month, .day], from: date)
-        components.hour = 9
-        components.minute = 0
+        components.hour = reminderHour
+        components.minute = reminderMinute
         components.second = 0
 
-        let todayAtNine = calendar.date(from: components) ?? date
-        if todayAtNine > date {
-            return todayAtNine
+        let todayAtReminderTime = calendar.date(from: components) ?? date
+        if todayAtReminderTime > date {
+            return todayAtReminderTime
         }
-        return calendar.date(byAdding: .day, value: 1, to: todayAtNine) ?? date.addingTimeInterval(86_400)
+        return calendar.date(byAdding: .day, value: 1, to: todayAtReminderTime)
+            ?? date.addingTimeInterval(86_400)
     }
 
     private func publishReminders() async {

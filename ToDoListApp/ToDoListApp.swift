@@ -12,6 +12,9 @@ struct ToDoListApp: App {
                 .environmentObject(settings)
                 .environmentObject(store)
                 .frame(minWidth: 760, minHeight: 540)
+                .task {
+                    await syncDailyNotificationConfiguration()
+                }
         }
         .defaultSize(width: 860, height: 620)
         .commands {
@@ -48,6 +51,18 @@ struct ToDoListApp: App {
                 .frame(width: 460)
         }
     }
+
+    private func syncDailyNotificationConfiguration() async {
+        let isAuthorized = await store.configureDailyNotifications(
+            isEnabled: settings.dailyNotificationsEnabled,
+            hour: settings.dailyNotificationHour,
+            minute: settings.dailyNotificationMinute
+        )
+
+        if settings.dailyNotificationsEnabled && !isAuthorized {
+            settings.dailyNotificationsEnabled = false
+        }
+    }
 }
 
 extension Notification.Name {
@@ -68,7 +83,7 @@ enum AppVersionDisplay {
             .object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
 
         guard let bundleVersion, !bundleVersion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return "0.6"
+            return "0.7"
         }
 
         return bundleVersion
@@ -78,7 +93,7 @@ enum AppVersionDisplay {
         let bundleBuild = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
 
         guard let bundleBuild, !bundleBuild.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return "6"
+            return "7"
         }
 
         return bundleBuild

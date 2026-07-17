@@ -1,6 +1,7 @@
 import ServiceManagement
 import SwiftUI
 import UniformTypeIdentifiers
+import UserNotifications
 
 struct SettingsView: View {
     @EnvironmentObject private var settings: AppSettings
@@ -31,6 +32,38 @@ struct SettingsView: View {
                         Text(launchAtLoginError ?? launchAtLoginStatusText ?? "")
                             .foregroundStyle(launchAtLoginError == nil ? Color.secondary : Color.red)
                     }
+                }
+            }
+
+            Section("Notifications") {
+                Toggle(
+                    "Daily task notifications",
+                    isOn: Binding(
+                        get: { settings.dailyNotificationsEnabled },
+                        set: { setDailyNotificationsEnabled($0) }
+                    )
+                )
+
+                DatePicker(
+                    "Reminder time",
+                    selection: Binding(
+                        get: { settings.dailyNotificationTime },
+                        set: { setDailyNotificationTime($0) }
+                    ),
+                    displayedComponents: .hourAndMinute
+                )
+                .disabled(!settings.dailyNotificationsEnabled)
+
+                LabeledContent("macOS permission", value: notificationPermissionLabel)
+
+                Text("At this time, receive one notification for each open high-priority task and task due today.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                if store.notificationAuthorizationStatus == .denied {
+                    Text("Notifications are blocked. Allow To-Do List in System Settings > Notifications, then enable this setting again.")
+                        .font(.caption)
+                        .foregroundStyle(.red)
                 }
             }
 
@@ -123,6 +156,9 @@ struct SettingsView: View {
         .font(settings.appFont(size: 13))
         .onAppear {
             refreshLaunchAtLoginStatus()
+            Task {
+                await syncDailyNotificationConfiguration()
+            }
         }
         .alert("Reset all task data?", isPresented: $showingResetFirstPrompt) {
             Button("Cancel", role: .cancel) {}
@@ -164,6 +200,23 @@ struct SettingsView: View {
         settings.hasBackgroundImage ? "Background image selected" : "No background image"
     }
 
+    private var notificationPermissionLabel: String {
+        switch store.notificationAuthorizationStatus {
+        case .notDetermined:
+            "Not requested"
+        case .denied:
+            "Denied"
+        case .authorized:
+            "Allowed"
+        case .provisional:
+            "Provisional"
+        case .ephemeral:
+            "Temporary"
+        @unknown default:
+            "Unknown"
+        }
+    }
+
     private var launchAtLoginStatusText: String? {
         switch SMAppService.mainApp.status {
         case .requiresApproval:
@@ -196,5 +249,31 @@ struct SettingsView: View {
     private func resetTaskData() {
         store.resetData()
         collapsedMenuBarGroupIDs = ""
+    }
+
+    private func setDailyNotificationsEnabled(_ isEnabled: Bool) {
+        settings.dailyNotificationsEnabled = isEnabled
+        Task {
+            await syncDailyNotificationConfiguration()
+        }
+    }
+
+    private func setDailyNotificationTime(_ time: Date) {
+        settings.dailyNotificationTime = time
+        Task {
+            await syncDailyNotificationConfiguration()
+        }
+    }
+
+    private func syncDailyNotificationConfiguration() async {
+        let isAuthorized = await store.configureDailyNotifications(
+            isEnabled: settings.dailyNotificationsEnabled,
+            hour: settings.dailyNotificationHour,
+            minute: settings.dailyNotificationMinute
+        )
+
+        if settings.dailyNotificationsEnabled && !isAuthorized {
+            settings.dailyNotificationsEnabled = false
+        }
     }
 }

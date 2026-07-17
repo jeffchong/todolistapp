@@ -1,6 +1,6 @@
-# To-Do List 0.6 Alpha Tester Guide
+# To-Do List 0.7 Alpha Tester Guide
 
-Thanks for trying the To-Do List alpha. This `0.6` build is meant to validate the core local task workflow before cloud sync and broader distribution are finished.
+Thanks for trying the To-Do List alpha. This `0.7` build is meant to validate the core local task workflow before cloud sync and broader distribution are finished.
 
 ## What to Expect
 
@@ -13,7 +13,7 @@ Thanks for trying the To-Do List alpha. This `0.6` build is meant to validate th
 - Menu bar task detail popovers, including priority editing.
 - Opening the full window from the menu bar dismisses the menu bar window.
 - Optional due dates, links, descriptions, statuses, and priorities.
-- Daily 9:00 AM notifications for high-priority tasks and tasks due today.
+- Opt-in daily notifications at a configurable time for high-priority tasks and tasks due today.
 - Local JSON persistence in Application Support.
 
 ## Alpha Limitations
@@ -30,7 +30,7 @@ Thanks for trying the To-Do List alpha. This `0.6` build is meant to validate th
 2. Move it to your `Applications` folder.
 3. Open it from Finder.
 4. If macOS warns that the app is from an unidentified developer, confirm the build came from the expected GitHub release before bypassing Gatekeeper.
-5. Allow notifications if you want daily reminders.
+5. In the app's Settings, enable **Daily task notifications** and allow notifications when macOS asks if you want daily reminders.
 
 ## Suggested Test Pass
 
@@ -47,7 +47,8 @@ Please try these workflows and note anything confusing, broken, or slower than e
 - Add a link to a task and confirm it opens.
 - Close the main window and keep using the menu bar app.
 - Open the full window from the menu bar and confirm the menu bar window dismisses.
-- Open settings and try font selection, launch at login, and background image settings.
+- Open settings, enable daily task notifications, choose a reminder time, and allow the macOS permission request.
+- Try font selection, launch at login, and background image settings.
 - Reset task data from settings if you want to start over.
 - Leave the app running across a restart or overnight and confirm data is still present.
 
@@ -56,7 +57,7 @@ Please try these workflows and note anything confusing, broken, or slower than e
 For each issue, include:
 
 - macOS version.
-- App version and build number shown in the app, such as `v0.6 (6)`.
+- App version and build number shown in the app, such as `v0.7 (7)`.
 - What you expected to happen.
 - What actually happened.
 - Steps to reproduce.

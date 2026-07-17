@@ -1,15 +1,15 @@
 # Release Checklist
 
-Use this checklist when preparing a `0.6` alpha build for testers.
+Use this checklist when preparing a `0.7` alpha build for testers.
 
 ## Version
 
-- Confirm `MARKETING_VERSION` is `0.6`.
+- Confirm `MARKETING_VERSION` is `0.7`.
 - Confirm the app bundle identifier is `com.jeffchong.todolist`.
-- Confirm `CURRENT_PROJECT_VERSION` is `6`, or increment it if you are replacing a prior `0.6` tester build.
+- Confirm `CURRENT_PROJECT_VERSION` is `7`, or increment it if you are replacing a prior `0.7` tester build.
 - Add release notes to `CHANGELOG.md`.
 - Confirm README status and tester docs match the release.
-- Confirm `docs/RELEASE_NOTES_0.6_ALPHA.md` matches the GitHub Release draft.
+- Confirm `docs/RELEASE_NOTES_0.7_ALPHA.md` matches the GitHub Release draft.
 
 ## Validation
 
@@ -57,6 +57,10 @@ xcodebuild build \
 - Change a task priority from the menu bar task detail popover.
 - Open settings.
 - Toggle launch at login and confirm any macOS approval prompt or status.
+- Confirm notification permission is not requested before opting in.
+- Enable daily task notifications and allow the macOS permission request.
+- Change the reminder time and confirm eligible notifications arrive at the selected time while the menu bar app is running.
+- Disable daily task notifications and confirm reminders stop.
 - Select and clear a background image.
 - Reset task data and confirm the app returns to an empty `General` group.
 - Quit and relaunch to confirm data persists.
@@ -77,26 +81,26 @@ For a small trusted-tester alpha, an unsigned Release build can be zipped locall
 Suggested title:
 
 ```text
-To-Do List 0.6 Alpha 1
+To-Do List 0.7 Alpha 1
 ```
 
 Suggested tag:
 
 ```text
-v0.6.0-alpha.1
+v0.7.0-alpha.1
 ```
 
 Suggested release notes:
 
 ```text
-Sixth alpha release for external testing.
+Seventh alpha release for external testing.
 
 Highlights:
 - Native macOS SwiftUI app with main window and menu bar utility.
 - Local groups and tasks with status, priority, due date, description, and link fields.
 - Menu bar quick-add and status updates.
 - Menu bar task detail popovers now support priority changes.
-- Optional app font, background image, launch-at-login, reset, and daily reminder settings.
+- Optional app font, background image, launch-at-login, reset, and configurable opt-in daily reminder settings.
 - Visible version/build labels in the main window and menu bar for easier feedback.
 - Drag-and-drop custom group reordering with `General` pinned at the top.
 - Menu bar task detail popovers for status, priority, due date, notes, and links.

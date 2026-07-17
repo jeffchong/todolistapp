@@ -8,6 +8,16 @@ This project follows a simple human-readable changelog format.
 
 - No unreleased changes yet.
 
+## 0.7.0-alpha.1 - 2026-07-17
+
+- Prepared the seventh alpha release for tester distribution.
+- Bumped the app marketing version to `0.7` and build number to `7`.
+- Added an explicit opt-in toggle for daily task notifications.
+- Added a configurable reminder time for open high-priority tasks and tasks due today.
+- Added notification-permission status and guidance to Settings.
+- Stopped requesting macOS notification permission automatically at app launch.
+- Refreshed release and tester documentation for the `0.7` alpha.
+
 ## 0.6.0-alpha.1 - 2026-06-30
 
 - Prepared the sixth alpha release for tester distribution.
